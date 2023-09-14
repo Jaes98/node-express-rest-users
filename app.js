@@ -1,6 +1,7 @@
 import express from "express";
 import fs from "fs/promises";
 import cors from "cors";
+import con from "./database.js";
 
 const app = express();
 const port = process.env.PORT || 3333;
@@ -12,6 +13,12 @@ app.get("/", (request, response) => {
     response.send("Node.js Users REST API 🎉");
 });
 
+async function getDataSql(params) {
+    
+}
+
+
+
 async function getUsersFromJSON() {
     const data = await fs.readFile("data.json");
     const users = JSON.parse(data);
@@ -21,8 +28,11 @@ async function getUsersFromJSON() {
 
 // READ all users
 app.get("/users", async (request, response) => {
-    response.json(await getUsersFromJSON());
-});
+    const query = `SELECT * FROM users`;
+    con.query(query, function (err, results, fields) {
+        response.json(results)
+    })
+    });
 
 // READ one user
 app.get("/users/:id", async (request, response) => {
